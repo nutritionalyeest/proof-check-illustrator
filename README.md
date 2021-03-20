@@ -1,5 +1,6 @@
 # proof-check-illustrator
 A  WIP javascript script for Adobe Illustrator for checking sticker proofs for Sticker Ninja
+
 Video of me demonstrating most of the features on a proof: 
 
 ## Current Features 
