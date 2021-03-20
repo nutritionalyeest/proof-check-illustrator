@@ -56,7 +56,7 @@ if(s<1){
   progLoop=false;
   break;
 }else if(s>1){
-  alert("I am confused by there are too many paths pleaz slect one cutline path and restart script");
+  alert("I am confused by there are too many paths pleaz select either zero or one cutline path and restart script");
   progLoop=false;
   break;
 }
@@ -86,9 +86,8 @@ if(theCutline.strokeColor.typename === "SpotColor"){
     wrongSpotColor=true;
   }
   if(wrongSpotColor){
-  var c=confirm("the cutline stroke color doesn't seem to be the right spot color \n Yes= end script to fix \n No = yuor rong");
-  if(c){
-    progLoop=false;
+  var spotCheck="the cutline stroke color doesn't seem to be the right spot color";
+  if(confirmStop(spotCheck)){
     break;
   }
 }
@@ -117,13 +116,13 @@ for (var i=0; i< rasterItems.length; i++){
   }
 }
 if(big){
-  if(confirmStop("something has big resolution. Do you want to check? - Clippy")){
+  if(confirmStop("something has big resolution. Do you want continue anyway?")){
       break;
   }
 
 }
 if(small){
-  if(confirmStop("something has small resolution. Will you do something about it?- Clippy")){
+  if(confirmStop("something has resolution less than 300 DPI. Do you want continue anyway?")){
       break;
   }
 
@@ -209,17 +208,38 @@ if(switched){
 }
 
 
+//ellipse check - check for small 1/8" ellipse commonly used to check safety trim width
+var strayEllipse=false;
+//check for path that is ellipse based on pi area equation and check that the ellipse is less than ~ 0.2" based on that area value
+for(var i=0; i<paths.length; i++){
+  var area =paths[i].width/2*paths[i].height/2*Math.PI;
 
-
-
-//Interview zome
-var checkOrder= "Dimensions of actual cutline: "+cutlineW+"\" wide and "+cutlineH+"\" high \n"+
-      "Squared: "+ cutlineW*cutlineH +"\n" + "LOOK AT SIZES ON ORDER. ARE THEY REFLECTED ON THE PROOF? >:-0" ;
-if(confirmStop(checkOrder)){
-  break;
+   if(Math.round(area*10) === Math.round(paths[i].area*10)){
+    if(Math.round(area)<165 && Math.round(area)> 1){
+      strayEllipse=true;
+      paths[i].selected=true;
+      break;
+    }
+  }
 }
 
-alert("Resolution, dimension labels, and spot color == probably ok :]");
+if(strayEllipse){
+  if(confirmStop("possible 1/8\" ellipse detected -- ignore?")){
+    break;
+  }
+
+}
+
+//Interview zome
+var checkOrder= "Dimensions CHECK \n" +"Dimensions of actual cutline: \n"+cutlineW+"\" wide and "+cutlineH+"\" high \n"+
+      "\nSQUARED: \n"+ cutlineW*cutlineH ;
+if(confirmStop(checkOrder)){
+  break;
+}else{
+  alert("LOOK AT SIZES ON ORDER PAGE >;-0")
+}
+
+alert("Resolution check: PASS \n Dimension check: PASS \n Spot color check: PASS :]");
 
 alert ("close your eyes and take one (1) medium breath");
 alert ("check order notes");
@@ -276,7 +296,7 @@ if(labelProof){
 }
 
 
-alert("proof seems okay. give the layers panel and the acutual page a once-over and save as PDF")
+alert("proof seems okay. give the layers panel and the actual page a once-over and save as PDF :)")
 
 progLoop=false;
 }
@@ -307,17 +327,9 @@ function justTheNumber(text){
 
 //confirmation dialog template
 function confirmStop(message){
-  var c = confirm(message+" \n Yes: It's fine please continue \n No: stop script to fix");
+  var c = confirm(message+" \n \n Yes: That's fine please continue \n No: stop script to fix");
     if(!c){
 //alert("stopping script so you can fix :-)");
-      progloop=false;
-      return true;
-    }
-}
-
-function whimStop(message){
-  var c = confirm(message+" \n Yes: Continue \n Stop script");
-    if(!c){
       progloop=false;
       return true;
     }
