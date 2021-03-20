@@ -52,7 +52,7 @@ for (var i=0; i< paths.length; i++){
     }
 }
 if(s<1){
-  alert("cant find cutline, pleaz slect the cutline path and restart script");
+  alert("I am confused by there are too many paths pleaz try \n 1. deselecting everything \n 2. or just the one cutline path \n and restart script");
   progLoop=false;
   break;
 }else if(s>1){
